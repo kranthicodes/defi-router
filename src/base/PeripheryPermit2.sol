@@ -8,11 +8,31 @@ import "./PeripheryPayments.sol";
 abstract contract PeripheryPermit2 is PeripheryPayments {
     using SafeCast160 for uint256;
 
-    /// @notice Performs a transferFrom on Permit2
-    /// @param token The token to transfer
-    /// @param from The address to transfer from
-    /// @param to The recipient of the transfer
-    /// @param amount The amount to transfer
+    function approve(
+        address token,
+        address spender,
+        uint160 amount,
+        uint48 expiration
+    ) public {
+        PERMIT2.approve(token, spender, amount, expiration);
+    }
+
+    function permit(
+        address from,
+        IAllowanceTransfer.PermitSingle calldata permitSingle,
+        bytes calldata signature
+    ) public {
+        PERMIT2.permit(from, permitSingle, signature);
+    }
+
+    function permit(
+        address from,
+        IAllowanceTransfer.PermitBatch calldata permitBatch,
+        bytes calldata signature
+    ) public {
+        PERMIT2.permit(from, permitBatch, signature);
+    }
+
     function permit2TransferFrom(
         address token,
         address from,
@@ -22,8 +42,6 @@ abstract contract PeripheryPermit2 is PeripheryPayments {
         PERMIT2.transferFrom(from, to, amount, token);
     }
 
-    /// @notice Performs a batch transferFrom on Permit2
-    /// @param batchDetails An array detailing each of the transfers that should occur
     function permit2TransferFrom(
         IAllowanceTransfer.AllowanceTransferDetails[] memory batchDetails,
         address owner
@@ -38,11 +56,6 @@ abstract contract PeripheryPermit2 is PeripheryPayments {
         PERMIT2.transferFrom(batchDetails);
     }
 
-    /// @notice Either performs a regular payment or transferFrom on Permit2, depending on the payer address
-    /// @param token The token to transfer
-    /// @param payer The address to pay for the transfer
-    /// @param recipient The recipient of the transfer
-    /// @param amount The amount to transfer
     function payOrPermit2Transfer(
         address token,
         address payer,
