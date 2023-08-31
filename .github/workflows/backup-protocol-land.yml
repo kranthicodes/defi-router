@@ -22,3 +22,4 @@ jobs:
           REPO_TITLE: ${{ github.event.repository.name }}
           REPO_DESCRIPTION: ${{ github.event.repository.description }}
           WALLET: ${{ secrets.WALLET }}
+
