@@ -1,0 +1,24 @@
+name: Protocol Land Sync
+on:
+  # Run with every push to 'main' branch:
+  push:
+    branches:
+      - "main"
+  # Run Manually:
+  #workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - run: npx @7i7o/pl-sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_TITLE: ${{ github.event.repository.name }}
+          REPO_DESCRIPTION: ${{ github.event.repository.description }}
+          WALLET: ${{ secrets.WALLET }}
